@@ -18,54 +18,82 @@ void handleEvents( SDL_Event &event, Level &level ) {
   case SDLK_q:
     running = false;
   case SDLK_a:
-    level.cameraSpeed.x -= 10.0f;
     level.playerSpeed.x -= 50.0f;
+  case SDLK_LEFT:
+    level.cameraSpeed.x -= 10.0f;
     break;
   case SDLK_w:
     //    speed.y += 10.0f;
-    level.playerSpeed.z += 1.0f;
+    level.playerSpeed.z += 0.75f;
     break;
   case SDLK_s:
-    level.cameraSpeed.x += 10.0f;
     level.playerSpeed.x += 50.0f;
+  case SDLK_RIGHT:
+    level.cameraSpeed.x += 10.0f;
     break;
   case SDLK_z:
     // speed.y -= 10.0f;
-    level.playerSpeed.z -= 1.0f;
+    level.playerSpeed.z -= 0.75f;
     break;
 
   case SDLK_e:
-    level.playerSpeed.y += 140.0f;
+    if ( level.playerSpeed.y < 1 ) {
+      level.playerSpeed.y += 140.0f;
+    }
     break;
   }
 }
 
 void initLevel( Level &level ) {
   Plane *plane;
+
+  plane = new Plane();
+  plane->p0.set( -500, 400, 5 );
+  plane->p1.set( -300, 400, 1 );  
+  plane->r = 255;
+  plane->g = 0;
+  plane->b = 0;
+  plane->ender = true;
+  level.planes.push_back( plane );
+
   
   plane = new Plane();
-  plane->p0.set( 25, 200, 5 );
-  plane->p1.set( 100, 200, 7 );  
+  plane->p0.set( 300, 250, 5 );
+  plane->p1.set( 100, 250, 7 );  
   plane->r = 255;
   plane->g = 255;
   plane->b = 0;
   level.planes.push_back( plane );
 
   plane = new Plane();
-  plane->p0.set( 400, 300, 1 );
-  plane->p1.set( 500, 300, 3 );  
+  plane->p0.set( 400, 150, 1 );
+  plane->p1.set( 500, 150, 3 );  
   plane->r = 255;
   plane->g = 255;
   plane->b = 255;
   level.planes.push_back( plane );
 
+
+
+
+
   plane = new Plane();
-  plane->p0.set( -600, 100, 8 );
-  plane->p1.set( -400, 100, 10 );  
+  plane->p0.set( -300, 300, 8 );
+  plane->p1.set( 0, 300, 10 );  
   plane->r = 255;
-  plane->g = 255;
+  plane->g = 128;
   plane->b = 0;
   level.planes.push_back( plane );
+
+
+  plane = new Plane();
+  plane->p0.set( -600, 400, 8 );
+  plane->p1.set( -400, 400, 10 );  
+  plane->r = 64;
+  plane->g = 64;
+  plane->b = 64;
+  level.planes.push_back( plane );
+
 }
 
 
@@ -77,7 +105,7 @@ int main ( int argc, char **argv ) {
   Level level;
   level.camera.set( 0, 200, 0 );
   level.cameraSpeed.set( 0, 0, 0 );
-  level.player.set( 6, 1000, 6 );
+  level.player.set( 6, 2, 1 );
   level.playerSpeed.set( 0, 0, 0 );
 
 

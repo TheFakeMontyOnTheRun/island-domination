@@ -9,11 +9,13 @@ class Plane {
   int r;
   int g;
   int b;
+  bool ender;
 
   Plane() {
     r = g = b = 0;
     p0.set( 0, 0, 0 );
     p1.set( p0 );
+    ender = false;
   }
 
   bool hit( Vec3 &point ) {
@@ -25,11 +27,11 @@ class Plane {
     if ( point.z < p0.z || point.z > p1.z )  {
       return false;
     }
-    /*
-    if ( point.y < p0.y || point.y > p1.y )  {
+        
+    if ( ( point.y - p0.y ) > 5 || ( p1.y - point.y ) > 5 )  {
       return false;
     }
-    */
+    
 
     return true;
   }
@@ -52,12 +54,28 @@ class Level {
     
     player.add( gravity );
     
-    cameraSpeed.scale( 0.9 );
-    playerSpeed.scale( 0.1f );
+    cameraSpeed.scale( 0.75f );
+    playerSpeed.scale( 0.125f );
     
-    if ( player.z <= 0.1f ) {
-      player.z = 0.1f;
+    if ( player.z <= 1.0f ) {
+      player.z = 1.0f;
     }
+    
+
+    if ( player.z >= 10.0f ) {
+      player.z = 10.0f;
+    }
+
+    if ( player.x <= -600.0f ) {
+      player.x = -600.0f;
+    }
+
+    if ( player.x >= 600.0f ) {
+      player.x = 600.0f;
+    }
+    
+
+    //    std::cout << player.x << ", " << player.y << ", " << player.z << std::endl;
 
     Plane *plane;
     
@@ -66,6 +84,12 @@ class Level {
       
       if ( plane->hit( player ) ) {
 	player.y = plane->p0.y;
+
+	if ( plane->ender ) {
+	  std::cout << "You won!" << std::endl;
+	  exit( 0 );
+	}
+
 	return;
       }
     }

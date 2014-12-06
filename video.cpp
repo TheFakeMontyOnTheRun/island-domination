@@ -126,8 +126,8 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
     drawXZPlane( video, level.camera, plane->p0, plane->p1, plane->r, plane->g, plane->b );
   }
 
-  p0.set( level.player.x - 20, level.player.y - 50, level.player.z );
-  p1.set( level.player.x + 20, level.player.y + 50, level.player.z + 0.1f );  
+  p0.set( level.player.x - 20, level.player.y, level.player.z );
+  p1.set( level.player.x + 20, level.player.y + 100, level.player.z + 0.1f );  
   drawCube( video, level.camera, p0, p1, 0, 0, 255 );
 
   SDL_UpdateRect( video, 0, 0, 0, 0 );
