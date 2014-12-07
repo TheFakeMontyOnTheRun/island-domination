@@ -9,13 +9,12 @@ class Plane {
   int r;
   int g;
   int b;
-  bool ender;
+  int id;
 
   Plane() {
     r = g = b = 0;
     p0.set( 0, 0, 0 );
     p1.set( p0 );
-    ender = false;
   }
 
   bool hit( Vec3 &point ) {
@@ -39,6 +38,8 @@ class Plane {
 
 class Level {
  public:
+  int nextId;
+  int jumps;
   Vec3 player;
   Vec3 playerSpeed;
   Vec3 camera;
@@ -85,9 +86,14 @@ class Level {
       if ( plane->hit( player ) ) {
 	player.y = plane->p0.y;
 
-	if ( plane->ender ) {
-	  std::cout << "You won!" << std::endl;
-	  exit( 0 );
+	if ( c == nextId ) {
+	  //	  planes.erase( planes.begin() + c );
+	  ++nextId;
+
+	  if ( nextId == planes.size() ) {
+	    std::cout << "You won!" << std::endl;
+	    exit( 0 );
+	  }
 	}
 
 	return;

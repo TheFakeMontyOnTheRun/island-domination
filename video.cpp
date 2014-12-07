@@ -100,6 +100,8 @@ void drawCube( SDL_Surface *video, Vec3 &camera, Vec3 &p0, Vec3 &p1, int r, int 
 
 void refreshScreen( SDL_Surface *video, Level &level ) {
 
+  Plane *plane;
+
   SDL_Rect rect;
   Uint32 colour;
   Vec3 p0;
@@ -108,19 +110,33 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
   rect.x = 0;
   rect.y = 0;
   rect.w = XRES;
-  rect.h = YRES;
-  
+  rect.h = YRES;  
   colour = SDL_MapRGB( video->format, 0, 0, 0 );
-  
-
   SDL_FillRect( video, &rect, colour );
+
+
+  rect.x = 0;
+  rect.y = YRES - 20;
+  rect.w = ( XRES / 20.0f ) * level.jumps;
+  rect.h = 20;  
+  colour = SDL_MapRGB( video->format, 255, 255, 255 );
+  SDL_FillRect( video, &rect, colour );
+
+
+
+  plane = level.planes[ level.nextId ];
   
+  rect.x = XRES - 50;
+  rect.y = 0;
+  rect.w = 50;
+  rect.h = 50;  
+  colour = SDL_MapRGB( video->format, plane->r, plane->g, plane->b );
+  SDL_FillRect( video, &rect, colour );
+
   p0.set( -600, 0, 1 );
   p1.set( 600, 0, 10 );  
   drawXZPlane( video, level.camera, p0, p1, 0, 255, 0 );
   
-  Plane *plane;
-
   for ( int c = 0; c < level.planes.size(); ++c ) {
     plane = level.planes[ c ];
     drawXZPlane( video, level.camera, plane->p0, plane->p1, plane->r, plane->g, plane->b );

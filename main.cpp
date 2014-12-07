@@ -37,8 +37,9 @@ void handleEvents( SDL_Event &event, Level &level ) {
     break;
 
   case SDLK_e:
-    if ( level.playerSpeed.y < 1 ) {
+    if ( level.jumps > 0 ) {
       level.playerSpeed.y += 140.0f;
+      --level.jumps;
     }
     break;
   }
@@ -53,7 +54,7 @@ void initLevel( Level &level ) {
   plane->r = 255;
   plane->g = 0;
   plane->b = 0;
-  plane->ender = true;
+  plane->id = 1;
   level.planes.push_back( plane );
 
   
@@ -63,6 +64,7 @@ void initLevel( Level &level ) {
   plane->r = 255;
   plane->g = 255;
   plane->b = 0;
+  plane->id = 2;
   level.planes.push_back( plane );
 
   plane = new Plane();
@@ -71,11 +73,8 @@ void initLevel( Level &level ) {
   plane->r = 255;
   plane->g = 255;
   plane->b = 255;
+  plane->id = 3;
   level.planes.push_back( plane );
-
-
-
-
 
   plane = new Plane();
   plane->p0.set( -300, 300, 8 );
@@ -83,6 +82,7 @@ void initLevel( Level &level ) {
   plane->r = 255;
   plane->g = 128;
   plane->b = 0;
+  plane->id = 4;
   level.planes.push_back( plane );
 
 
@@ -92,8 +92,12 @@ void initLevel( Level &level ) {
   plane->r = 64;
   plane->g = 64;
   plane->b = 64;
+  plane->id = 5;
+
   level.planes.push_back( plane );
 
+  level.nextId = 2;
+  level.jumps = 20;
 }
 
 
