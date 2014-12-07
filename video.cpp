@@ -116,10 +116,17 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
 
 
   rect.x = 0;
-  rect.y = YRES - 20;
-  rect.w = ( XRES / 20.0f ) * level.jumps;
+  rect.y = YRES - 40;
+  rect.w = ( XRES / DEFAULTJUMPS ) * level.jumps;
   rect.h = 20;  
   colour = SDL_MapRGB( video->format, 255, 255, 255 );
+  SDL_FillRect( video, &rect, colour );
+
+  rect.x = 0;
+  rect.y = YRES - 20;
+  rect.w = ( XRES / DEFAULTTIME ) * level.timeLeft;
+  rect.h = 20;  
+  colour = SDL_MapRGB( video->format, 128, 128, 128 );
   SDL_FillRect( video, &rect, colour );
 
 

@@ -39,6 +39,7 @@ void handleEvents( SDL_Event &event, Level &level ) {
   case SDLK_e:
     if ( level.jumps > 0 ) {
       level.playerSpeed.y += 140.0f;
+      level.cameraSpeed.y += 5.0f;
       --level.jumps;
     }
     break;
@@ -49,8 +50,8 @@ void initLevel( Level &level ) {
   Plane *plane;
 
   plane = new Plane();
-  plane->p0.set( -500, 400, 5 );
-  plane->p1.set( -300, 400, 1 );  
+  plane->p0.set( -500, 400, 1 );
+  plane->p1.set( -300, 400, 5 );  
   plane->r = 255;
   plane->g = 0;
   plane->b = 0;
@@ -59,8 +60,8 @@ void initLevel( Level &level ) {
 
   
   plane = new Plane();
-  plane->p0.set( 300, 250, 5 );
-  plane->p1.set( 100, 250, 7 );  
+  plane->p0.set( 100, 250, 5 );
+  plane->p1.set( 300, 250, 7 );  
   plane->r = 255;
   plane->g = 255;
   plane->b = 0;
@@ -96,8 +97,8 @@ void initLevel( Level &level ) {
 
   level.planes.push_back( plane );
 
-  level.nextId = 2;
-  level.jumps = 20;
+  level.nextId = 0;
+  level.jumps = DEFAULTJUMPS;
 }
 
 

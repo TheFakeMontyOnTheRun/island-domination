@@ -1,3 +1,5 @@
+#include <sstream>
+
 #ifndef PLAT_base_H
 #define PLAT_base_H
 
@@ -5,6 +7,8 @@
 #define YRES 480
 #define XBOARDSIZE 1000
 #define ZBOARDSIZE 20
+#define DEFAULTJUMPS 30
+#define DEFAULTTIME 100
 
 class Vec2 {
 public:
@@ -57,6 +61,19 @@ public:
     x *= factor;
     y *= factor;
     z *= factor;
+  }
+
+  std::string toString() {
+    std::stringstream toReturn;
+    toReturn << "( ";
+    toReturn << (x);
+    toReturn << ", ";
+    toReturn << (y);
+    toReturn << ", ";
+    toReturn << (z);
+    toReturn << " )";
+    
+    return toReturn.str();
   }
 };
 #endif
