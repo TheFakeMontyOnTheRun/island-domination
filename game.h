@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #ifndef PLAT_game_H
 #define PLAT_game_H
 
@@ -31,6 +33,99 @@ class Plane {
   }
 };
 
+class Particle {
+	public:
+
+	int size;
+	Vec3 position;
+	Vec3 speed;
+	Vec3 accel;
+
+	Particle() {
+		size = 64;
+	}
+
+	void update() {
+		--size;
+		position.add( speed );
+		speed.add( accel );
+
+		if ( position.y <= 0 ) {
+			speed.y = accel.y = position.y = 0;
+		}
+	}
+};
+
+class ParticleEmitter {
+	public:
+	int intensity;
+	bool active;
+	Particle origin;
+	std::vector< Particle* >particles;
+	
+	ParticleEmitter() {
+		active = true;
+		intensity = 64;
+	}
+
+	void update() {
+		Particle *p;
+	
+		if ( active ) {
+			for ( int c = 0; c < intensity; ++c ) {
+				p = new Particle();
+				p->position.set( origin.position );
+				p->accel.set( -0.01f * RAND_MAX + 0.02f * rand(), -2.0f * RAND_MAX, 0.0f );
+				p->accel.scale( 1.0f / RAND_MAX );
+//				p->accel.set( 0.0f, -0.25f, 0.0f );
+				particles.push_back( p );
+								
+			}	
+		}
+
+		for ( int c = 0; c < particles.size(); ++c ) {
+			p = particles[ c ];
+			p->update();
+		}
+	
+	
+		bool changed = true;
+		while ( changed ) {
+			changed = false; 
+			for ( int c = 0; c < particles.size(); ++c ) {
+				p = particles[ c ];
+	
+				if ( p->size <= 2 ) {
+					particles.erase( particles.begin() + c );
+					changed = true;
+	
+					break;
+				}
+			}
+		}
+	
+	}
+};
+
+class Body {
+	public:
+	Particle bodyRep;
+	ParticleEmitter jetpack;
+	
+	Body() {
+		jetpack.active = true;
+	}
+	
+	void update() {
+		jetpack.update();
+		bodyRep.update();
+		jetpack.origin.position.set( bodyRep.position );
+		if ( jetpack.active ) {
+			jetpack.active = false;
+		}
+	}
+};
+
 class Level {
 
   int initialTime;
@@ -39,9 +134,8 @@ class Level {
   int nextId;
   int jumps;
   int timeLeft;
-  Vec3 player;
-  Vec3 playerSpeed;
-  Vec3 camera;
+  Body player;
+   Vec3 camera;
   Vec3 cameraSpeed;
   std::vector< Plane *> planes;
 
@@ -59,49 +153,58 @@ class Level {
       exit( 0 );
     }
     
-    Vec3 gravity( 0, -2, 0 );
+    Vec3 gravity( 0, -10, 0 );
     
     camera.add( cameraSpeed );
-    player.add( playerSpeed );
-    
+    player.update();
     
     cameraSpeed.scale( 0.75f );
-    playerSpeed.scale( 0.125f );
+    player.bodyRep.speed.scale( 0.125f, 1.0f, 0.125f );
     
-    if ( camera.y > player.y + 10 ) {
+    if ( camera.y > player.bodyRep.position.y + 10 ) {
       cameraSpeed.y = -1;
     }
     
     
-    if ( player.z <= 1.0f ) {
-      player.z = 1.0f;
+    if ( player.bodyRep.position.z <= 1.0f ) {
+      player.bodyRep.position.z = 1.0f;
     }
     
 
-    if ( player.z >= 10.0f ) {
-      player.z = 10.0f;
+    if ( player.bodyRep.position.z >= 10.0f ) {
+      player.bodyRep.position.z = 10.0f;
     }
     
-    if ( player.x <= -600.0f ) {
-      player.x = -600.0f;
+    if ( player.bodyRep.position.x <= -600.0f ) {
+      player.bodyRep.position.x = -600.0f;
     }
     
-    if ( player.x >= 600.0f ) {
-      player.x = 600.0f;
+    if ( player.bodyRep.position.x >= 600.0f ) {
+      player.bodyRep.position.x = 600.0f;
     }
     
 
     Plane *plane;
-    
+    Particle *p;
+
     for ( int c = 0; c < planes.size(); ++c ) {
       plane = planes[ c ];
       
-
-      if ( plane->hit( player ) ) {
 	
-	player.y = plane->p0.y;
-	playerSpeed.y = 0;
-      
+	for ( int d = 0; d < player.jetpack.particles.size(); ++d ) {
+		p = player.jetpack.particles[ d ];
+
+		if ( plane->hit( p->position ) ) {
+			p->accel.y = 0;
+			p->speed.y = 0;
+		}
+	}
+
+      if ( plane->hit( player.bodyRep.position ) ) {
+	
+	player.bodyRep.position.y = plane->p0.y;
+	player.bodyRep.speed.y = 0;
+      	player.jetpack.active = false;
 	if ( c == nextId ) {
 	  ++nextId;
 	  
@@ -115,11 +218,14 @@ class Level {
       }
     }
 
-    player.add( gravity );
+    player.bodyRep.position.add( gravity );
 
-    if ( player.y <= 0.1f ) {
-      player.y = 0.1f;
-    }
+    if ( player.bodyRep.position.y <= 0.1f ) {
+      player.bodyRep.position.y = 0.1f;
+ 	player.jetpack.active = false; 
+	  } else {
+		player.jetpack.active = true;
+	}
   }
 };
 

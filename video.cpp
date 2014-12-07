@@ -149,8 +149,16 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
     drawXZPlane( video, level.camera, plane->p0, plane->p1, plane->r, plane->g, plane->b );
   }
 
-  p0.set( level.player.x - 20, level.player.y, level.player.z );
-  p1.set( level.player.x + 20, level.player.y + 100, level.player.z + 0.1f );  
+
+		Particle *p;
+		for ( int c = 0; c < level.player.jetpack.particles.size(); ++c ) {
+			p = level.player.jetpack.particles[ c ];
+			draw3DLine( video, level.camera, p->position, p->position, 255 - p->size, 0, 0 );
+		}
+
+
+  p0.set( level.player.bodyRep.position.x - 20, level.player.bodyRep.position.y, level.player.bodyRep.position.z );
+  p1.set( level.player.bodyRep.position.x + 20, level.player.bodyRep.position.y + 100, level.player.bodyRep.position.z + 0.1f );  
   drawCube( video, level.camera, p0, p1, 0, 0, 255 );
 
   SDL_UpdateRect( video, 0, 0, 0, 0 );

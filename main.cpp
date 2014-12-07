@@ -18,27 +18,27 @@ void handleEvents( SDL_Event &event, Level &level ) {
   case SDLK_q:
     running = false;
   case SDLK_a:
-    level.playerSpeed.x -= 50.0f;
-  case SDLK_LEFT:
+    level.player.bodyRep.speed.x -= 50.0f;
+  //case SDLK_LEFT:
     level.cameraSpeed.x -= 10.0f;
     break;
   case SDLK_w:
     //    speed.y += 10.0f;
-    level.playerSpeed.z += 0.75f;
+    level.player.bodyRep.speed.z += 0.5f;
     break;
   case SDLK_s:
-    level.playerSpeed.x += 50.0f;
-  case SDLK_RIGHT:
+    level.player.bodyRep.speed.x += 50.0f;
+  //case SDLK_RIGHT:
     level.cameraSpeed.x += 10.0f;
     break;
   case SDLK_z:
     // speed.y -= 10.0f;
-    level.playerSpeed.z -= 0.75f;
+    level.player.bodyRep.speed.z -= 0.5f;
     break;
 
   case SDLK_e:
     if ( level.jumps > 0 ) {
-      level.playerSpeed.y += 140.0f;
+      level.player.bodyRep.position.y += 150.0f;
       level.cameraSpeed.y += 5.0f;
       --level.jumps;
     }
@@ -110,8 +110,8 @@ int main ( int argc, char **argv ) {
   Level level;
   level.camera.set( 0, 200, 0 );
   level.cameraSpeed.set( 0, 0, 0 );
-  level.player.set( 6, 2, 1 );
-  level.playerSpeed.set( 0, 0, 0 );
+  level.player.bodyRep.position.set( 6, 2, 1 );
+  level.player.bodyRep.speed.set( 0, 0, 0 );
 
 
   initLevel( level );
