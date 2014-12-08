@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 #include <vector>
 
 #include "base.h"
@@ -8,9 +10,13 @@
 
 #include "video.h"
 
+
+
 bool running = true;
-
-
+bool playSounds = true;
+Mix_Chunk *jetSound = nullptr;
+Mix_Chunk *gotIt = nullptr;
+Mix_Chunk *step = nullptr;
 
 void handleEvents( SDL_Event &event, Level &level ) {
 
@@ -41,6 +47,11 @@ void handleEvents( SDL_Event &event, Level &level ) {
       level.player.bodyRep.position.y += 150.0f;
       level.cameraSpeed.y += 5.0f;
       --level.jumps;
+
+      if ( playSounds ) {
+	Mix_PlayChannel( -1, jetSound, 0 );
+      }
+
     }
     break;
   }
@@ -101,6 +112,27 @@ void initLevel( Level &level ) {
   level.jumps = DEFAULTJUMPS;
 }
 
+void showTitleScreen( SDL_Surface *video ) {
+
+  SDL_Surface *title;
+  title = IMG_Load( "res/title.png" );
+  showScreen( video, title );
+  SDL_FreeSurface( title );
+
+  SDL_Rect rect;
+
+  rect.x = 0;
+  rect.y = 0;
+  rect.w = XRES;
+  rect.h = YRES;
+  SDL_FillRect( video, &rect, SDL_MapRGB( video->format, 0, 0, 0 ) );
+
+  title = IMG_Load( "res/history.png" );
+  showScreen( video, title );
+  SDL_FreeSurface( title );
+
+}
+
 
 int main ( int argc, char **argv ) {
   
@@ -119,12 +151,24 @@ int main ( int argc, char **argv ) {
 
    
   SDL_Init( SDL_INIT_EVERYTHING );
-  
-  video = SDL_SetVideoMode( 640, 480, 0, 0 );
+  if ( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 ) {
+      std::cout << "Could not start sound system..." << std::endl;
+      playSounds = false;
+    } else {
+      jetSound = Mix_LoadWAV( "res/jet.wav" );
+      gotIt = Mix_LoadWAV( "res/gotIt.wav" );
+      //      step = Mix_LoadWAV( "res/step.wav" );
+      std::cout << "Sound ready!" << std::endl;
+      playSounds = true;
+    }
+
+    video = SDL_SetVideoMode( 640, 480, 0, 0 );
+
+  showTitleScreen( video );
   
   while ( running ) {
 
-    level.updateGame();
+    level.updateGame( gotIt, step, video );
     refreshScreen( video, level );
 
     
@@ -137,6 +181,9 @@ int main ( int argc, char **argv ) {
       handleEvents( event, level );
     }
   }
+
+    SDL_FreeSurface( video );
+    Mix_FreeChunk( jetSound );
   
   SDL_Quit();
   

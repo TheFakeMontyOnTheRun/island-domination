@@ -3,6 +3,8 @@
 #ifndef PLAT_game_H
 #define PLAT_game_H
 
+extern void showScreen( SDL_Surface *video, SDL_Surface *screen );
+
 class Plane {
  public:
   
@@ -143,17 +145,22 @@ class Level {
     initialTime = time( 0 );
   }
 
-  void updateGame() {
+  void updateGame( Mix_Chunk *gotIt, Mix_Chunk *step, SDL_Surface *video ) {
     
     timeLeft = DEFAULTTIME - ( time( 0 ) - initialTime );
 
     if ( timeLeft < 0 ) {
 
       std::cout << std::endl << "Time up!" << std::endl;      
-      exit( 0 );
+      SDL_Surface *outcome = IMG_Load( "res/timeup.png" );
+      showScreen( video, outcome );
+      SDL_FreeSurface( video );
+      SDL_FreeSurface( outcome );
+      SDL_Quit();
+      exit( 0 ); 
     }
     
-    Vec3 gravity( 0, -10, 0 );
+    Vec3 gravity( 0, -2, 0 );
     
     camera.add( cameraSpeed );
     player.update();
@@ -205,12 +212,29 @@ class Level {
 	player.bodyRep.position.y = plane->p0.y;
 	player.bodyRep.speed.y = 0;
       	player.jetpack.active = false;
+
 	if ( c == nextId ) {
 	  ++nextId;
 	  
+	  if ( gotIt != nullptr ) {
+	    Mix_PlayChannel( -1, gotIt, 0 );
+	  }
+
+
+
 	  if ( nextId == planes.size() ) {
 	    std::cout << std::endl << "You won!" << std::endl;
+	    SDL_Surface *outcome = IMG_Load( "res/won.png" );
+	    showScreen( video, outcome );
+	    SDL_FreeSurface( video );
+	    SDL_FreeSurface( outcome );
+	    SDL_Quit();
 	    exit( 0 );
+	  }
+	} else {
+
+	  if ( step != nullptr ) {
+	    //	    Mix_PlayChannel( -1, step, 0 );
 	  }
 	}
 	

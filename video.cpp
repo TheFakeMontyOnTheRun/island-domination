@@ -2,7 +2,8 @@
 #include <iostream>
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
-
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 #include "base.h"
 #include "game.h"
 
@@ -165,3 +166,10 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
 
 }
 
+void showScreen( SDL_Surface *video, SDL_Surface *screen ) {
+  SDL_Event event;                                                                                    
+
+  SDL_BlitSurface( screen, NULL, video, NULL );
+  SDL_Flip( video );                                                                                     
+  while ( true ) {                                                                                          if ( SDL_PollEvent( &event ) ) {                                                                          if ( event.type == SDL_KEYDOWN ) {                                                                	return;                                                                                               }                                                                                                 
+    }                                                                                                      }                                                                                                     } 
