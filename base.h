@@ -7,8 +7,8 @@
 #define YRES 480
 #define XBOARDSIZE 1000
 #define ZBOARDSIZE 20
-#define DEFAULTJUMPS 25
-#define DEFAULTTIME 25
+#define DEFAULTJUMPS 30
+#define DEFAULTTIME 40
 
 class Vec2 {
 public:

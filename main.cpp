@@ -44,7 +44,7 @@ void handleEvents( SDL_Event &event, Level &level ) {
 
   case SDLK_e:
     if ( level.jumps > 0 ) {
-      level.player.bodyRep.position.y += 150.0f;
+      level.player.bodyRep.speed.y += 50.0f;
       level.cameraSpeed.y += 5.0f;
       --level.jumps;
 
@@ -160,30 +160,41 @@ int main ( int argc, char **argv ) {
       //      step = Mix_LoadWAV( "res/step.wav" );
       std::cout << "Sound ready!" << std::endl;
       playSounds = true;
-    }
-
-    video = SDL_SetVideoMode( 640, 480, 0, 0 );
-
+  }
+  
+  video = SDL_SetVideoMode( 640, 480, 0, 0 );
+  
   showTitleScreen( video );
   
+  clock_t t0;
+  clock_t t1;
+  float delta;
   while ( running ) {
+    
+    t0 = clock();
 
     level.updateGame( gotIt, step, video );
     refreshScreen( video, level );
-
+    
     
     if ( SDL_PollEvent( &event ) ) {
-
+      
       if( event.type == SDL_QUIT ) {
 	running = false;
       }
-  
+      
       handleEvents( event, level );
     }
-  }
 
-    SDL_FreeSurface( video );
-    Mix_FreeChunk( jetSound );
+    t1 = clock();
+ 
+    delta = ((((float) t1 ) - ((float)t0)) / CLOCKS_PER_SEC );
+    
+    SDL_Delay( 50 - ( 1000 * delta ) );
+  }
+  
+  SDL_FreeSurface( video );
+  Mix_FreeChunk( jetSound );
   
   SDL_Quit();
   

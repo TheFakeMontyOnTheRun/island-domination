@@ -21,11 +21,11 @@ class Plane {
     p1.set( p0 );
   }
   
-  bool hit( Vec3 &point ) {
+  bool hit( Vec3 &point, float delta = 0 ) {
     
     if ( p0.x <= point.x && point.x <= p1.x )  {
       if ( p0.z <= point.z && point.z <= p1.z )  {
-	if ( fabs( p0.y - point.y ) < 0.1f || fabs( point.y - p1.y ) < 0.1f )  {
+	if ( fabs( point.y - p0.y ) <= 50 || fabs( point.y - p1.y ) <= 50 )  {
 	  return true;
 	}
       }
@@ -160,7 +160,7 @@ class Level {
       exit( 0 ); 
     }
     
-    Vec3 gravity( 0, -2, 0 );
+    Vec3 gravity( 0, -9.8, 0 );
     
     camera.add( cameraSpeed );
     player.update();
@@ -201,24 +201,28 @@ class Level {
 	for ( int d = 0; d < player.jetpack.particles.size(); ++d ) {
 		p = player.jetpack.particles[ d ];
 
-		if ( plane->hit( p->position ) ) {
+		if ( plane->hit( p->position, p->speed.y ) ) {
 			p->accel.y = 0;
 			p->speed.y = 0;
 		}
 	}
 
-      if ( plane->hit( player.bodyRep.position ) ) {
-	
-	player.bodyRep.position.y = plane->p0.y;
-	player.bodyRep.speed.y = 0;
-      	player.jetpack.active = false;
-
-	if ( c == nextId ) {
-	  ++nextId;
+	if ( plane->hit( player.bodyRep.position, 50) ) {
 	  
-	  if ( gotIt != nullptr ) {
-	    Mix_PlayChannel( -1, gotIt, 0 );
+	  player.bodyRep.position.y = plane->p0.y;
+	  
+	  if ( player.bodyRep.speed.y < 0 ) {
+	    player.bodyRep.speed.y = 0;
 	  }
+	  
+	  player.jetpack.active = false;
+	  
+	  if ( c == nextId ) {
+	    ++nextId;
+	    
+	    if ( gotIt != nullptr ) {
+	      Mix_PlayChannel( -1, gotIt, 0 );
+	    }
 
 
 
@@ -242,7 +246,7 @@ class Level {
       }
     }
 
-    player.bodyRep.position.add( gravity );
+    player.bodyRep.speed.add( gravity );
 
     if ( player.bodyRep.position.y <= 0.1f ) {
       player.bodyRep.position.y = 0.1f;
