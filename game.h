@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <time.h> //required by MinGW32
 
 #ifndef PLAT_game_H
 #define PLAT_game_H
@@ -16,6 +17,7 @@ class Plane {
   int id;
 
   Plane() {
+    id = 0;
     r = g = b = 0;
     p0.set( 0, 0, 0 );
     p1.set( p0 );
@@ -142,6 +144,9 @@ class Level {
   std::vector< Plane *> planes;
 
   Level() {
+    timeLeft = DEFAULTTIME;
+    nextId = 0;
+    jumps = DEFAULTJUMPS;
     initialTime = time( 0 );
   }
 

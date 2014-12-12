@@ -51,8 +51,10 @@ void handleEvents( SDL_Event &event, Level &level ) {
       if ( playSounds ) {
 	Mix_PlayChannel( -1, jetSound, 0 );
       }
-
     }
+    break;
+
+  default:
     break;
   }
 }
@@ -107,9 +109,6 @@ void initLevel( Level &level ) {
   plane->id = 5;
 
   level.planes.push_back( plane );
-
-  level.nextId = 0;
-  level.jumps = DEFAULTJUMPS;
 }
 
 void showTitleScreen( SDL_Surface *video ) {
@@ -130,7 +129,6 @@ void showTitleScreen( SDL_Surface *video ) {
   title = IMG_Load( "res/history.png" );
   showScreen( video, title );
   SDL_FreeSurface( title );
-
 }
 
 
@@ -145,12 +143,10 @@ int main ( int argc, char **argv ) {
   level.player.bodyRep.position.set( 6, 2, 1 );
   level.player.bodyRep.speed.set( 0, 0, 0 );
 
-
   initLevel( level );
 
-
-   
   SDL_Init( SDL_INIT_EVERYTHING );
+
   if ( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 ) == -1 ) {
       std::cout << "Could not start sound system..." << std::endl;
       playSounds = false;
@@ -169,6 +165,7 @@ int main ( int argc, char **argv ) {
   clock_t t0;
   clock_t t1;
   float delta;
+
   while ( running ) {
     
     t0 = clock();

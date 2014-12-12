@@ -18,8 +18,6 @@ void draw3DLine( SDL_Surface *video, Vec3 &camera, Vec3 &p0, Vec3 &p1, int r, in
   float y1 = ( YRES / 2 ) - ( ( p1.y - camera.y ) / ( p1.z - camera.z ) );
 
   lineRGBA( video, x0, y0, x1, y1, r, g, b, 255 );
-
-
   lineRGBA( video, 100 +  p0.x / 10, 100 - p0.z * 10, 100 +  p1.x / 10, 100 - p1.z * 10, r, g, b, 255 );
 }
 
@@ -61,17 +59,10 @@ void drawCube( SDL_Surface *video, Vec3 &camera, Vec3 &p0, Vec3 &p1, int r, int 
   _p0.y = p1.y;
   drawXZPlane( video, camera, _p0, _p1, r, g, b );
 
-
-
-
-
-  
   _p0.set( p0 );
   _p1.set( p0 );
   _p1.y = p1.y;
   draw3DLine( video, camera, _p0, _p1, r, g, b );
-
-
 
   _p0.set( p1 );
   _p1.set( p1 );
@@ -150,13 +141,13 @@ void refreshScreen( SDL_Surface *video, Level &level ) {
     drawXZPlane( video, level.camera, plane->p0, plane->p1, plane->r, plane->g, plane->b );
   }
 
-
-		Particle *p;
-		for ( int c = 0; c < level.player.jetpack.particles.size(); ++c ) {
-			p = level.player.jetpack.particles[ c ];
-			draw3DLine( video, level.camera, p->position, p->position, 255 - p->size, 0, 0 );
-		}
-
+  
+  Particle *p;
+  for ( int c = 0; c < level.player.jetpack.particles.size(); ++c ) {
+    p = level.player.jetpack.particles[ c ];
+    draw3DLine( video, level.camera, p->position, p->position, 255 - p->size, 0, 0 );
+  }
+  
 
   p0.set( level.player.bodyRep.position.x - 20, level.player.bodyRep.position.y, level.player.bodyRep.position.z );
   p1.set( level.player.bodyRep.position.x + 20, level.player.bodyRep.position.y + 100, level.player.bodyRep.position.z + 0.1f );  
