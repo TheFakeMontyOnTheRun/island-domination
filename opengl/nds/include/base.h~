@@ -3,8 +3,8 @@
 #ifndef PLAT_base_H
 #define PLAT_base_H
 
-#define XRES 255
-#define YRES 191
+#define XRES 640
+#define YRES 480
 #define XBOARDSIZE 1000
 #define ZBOARDSIZE 20
 #define DEFAULTJUMPS 30

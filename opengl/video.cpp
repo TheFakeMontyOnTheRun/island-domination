@@ -14,7 +14,7 @@
 
 void draw3DLine( SDL_Surface *video, Vec3 &camera, Vec3 &p0, Vec3 &p1, int r, int g, int b ) {
 
-	glColor4f( r, g, b, 255 );
+  glColor4f( r / 255.0f, g / 255.0f, b / 255.0f, 1.0f );
 	
   glBegin( GL_LINES );
   

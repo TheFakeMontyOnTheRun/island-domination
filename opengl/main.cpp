@@ -181,11 +181,11 @@ int main ( int argc, char **argv ) {
       playSounds = true;
   }
   
-  video = SDL_SetVideoMode( 640, 480, 16, SDL_OPENGL );
+  video = SDL_SetVideoMode( 255, 191, 16, SDL_OPENGL );
   
 	initGL();
   initLevel( level );
-    resizeWindow( 640, 480 );
+    resizeWindow( 255,191 );
   
   clock_t t0;
   clock_t t1;
@@ -211,6 +211,7 @@ int main ( int argc, char **argv ) {
     t1 = clock();
  
     delta = ((((float) t1 ) - ((float)t0)) / CLOCKS_PER_SEC );
+    SDL_Delay( 50 );
   }
   
   SDL_FreeSurface( video );
