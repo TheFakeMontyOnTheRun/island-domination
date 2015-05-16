@@ -10,3 +10,5 @@ It is known to run on Raspberry-pi and even (barely, by a crude OpenGL port) in 
 
 Yeah, eventually, I wrote a OpenGL demo of it.
 
+![Alt text](/screenshot.png?raw=true "Screenshot for game")
+
