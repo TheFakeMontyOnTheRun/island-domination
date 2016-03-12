@@ -4,7 +4,9 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <vector>
-
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 #include "base.h"
 #include "game.h"
 
@@ -131,13 +133,30 @@ void showTitleScreen( SDL_Surface *video ) {
   SDL_FreeSurface( title );
 }
 
-
-int main ( int argc, char **argv ) {
-  
   SDL_Surface *video;
   SDL_Event event;
   
   Level level;
+
+
+void mainLoop() {
+    level.updateGame( gotIt, step, video );
+    refreshScreen( video, level );
+    
+    
+    if ( SDL_PollEvent( &event ) ) {
+      
+      if( event.type == SDL_QUIT ) {
+	running = false;
+      }
+      
+      handleEvents( event, level );
+    }
+}
+
+int main ( int argc, char **argv ) {
+  
+
   level.camera.set( 0, 200, 0 );
   level.cameraSpeed.set( 0, 0, 0 );
   level.player.bodyRep.position.set( 6, 2, 1 );
@@ -159,41 +178,11 @@ int main ( int argc, char **argv ) {
   }
   
   video = SDL_SetVideoMode( 640, 480, 0, 0 );
-  
-  showTitleScreen( video );
-  
-  clock_t t0;
-  clock_t t1;
-  float delta;
 
-  while ( running ) {
-    
-    t0 = clock();
+  //  showTitleScreen( video );
 
-    level.updateGame( gotIt, step, video );
-    refreshScreen( video, level );
-    
-    
-    if ( SDL_PollEvent( &event ) ) {
-      
-      if( event.type == SDL_QUIT ) {
-	running = false;
-      }
-      
-      handleEvents( event, level );
-    }
+  emscripten_set_main_loop(mainLoop, 30, 1);
 
-    t1 = clock();
- 
-    delta = ((((float) t1 ) - ((float)t0)) / CLOCKS_PER_SEC );
-    
-    SDL_Delay( 50 - ( 1000 * delta ) );
-  }
-  
-  SDL_FreeSurface( video );
-  Mix_FreeChunk( jetSound );
-  
-  SDL_Quit();
   
   return 0;
 }

@@ -4,6 +4,10 @@
 #include <SDL/SDL_gfxPrimitives.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 #include "base.h"
 #include "game.h"
 
@@ -162,5 +166,13 @@ void showScreen( SDL_Surface *video, SDL_Surface *screen ) {
 
   SDL_BlitSurface( screen, NULL, video, NULL );
   SDL_Flip( video );                                                                                     
-  while ( true ) {                                                                                          if ( SDL_PollEvent( &event ) ) {                                                                          if ( event.type == SDL_KEYDOWN ) {                                                                	return;                                                                                               }                                                                                                 
+  while ( true ) {
+    if ( SDL_PollEvent( &event ) ) { 
+      if ( event.type == SDL_KEYDOWN ) {
+	return; 
+      }
+      
+      
+      
+      
     }                                                                                                      }                                                                                                     } 

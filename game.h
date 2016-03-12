@@ -4,7 +4,7 @@
 #ifndef PLAT_game_H
 #define PLAT_game_H
 
-extern void showScreen( SDL_Surface *video, SDL_Surface *screen );
+//extern void showScreen( SDL_Surface *video, SDL_Surface *screen );
 
 class Plane {
  public:
@@ -157,12 +157,7 @@ class Level {
     if ( timeLeft < 0 ) {
 
       std::cout << std::endl << "Time up!" << std::endl;      
-      SDL_Surface *outcome = IMG_Load( "res/timeup.png" );
-      showScreen( video, outcome );
-      SDL_FreeSurface( video );
-      SDL_FreeSurface( outcome );
-      SDL_Quit();
-      exit( 0 ); 
+      return;
     }
     
     Vec3 gravity( 0, -9.8, 0 );
@@ -233,12 +228,7 @@ class Level {
 
 	  if ( nextId == planes.size() ) {
 	    std::cout << std::endl << "You won!" << std::endl;
-	    SDL_Surface *outcome = IMG_Load( "res/won.png" );
-	    showScreen( video, outcome );
-	    SDL_FreeSurface( video );
-	    SDL_FreeSurface( outcome );
-	    SDL_Quit();
-	    exit( 0 );
+	   
 	  }
 	} else {
 
